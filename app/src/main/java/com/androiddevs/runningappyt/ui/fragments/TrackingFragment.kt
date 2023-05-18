@@ -1,10 +1,13 @@
 package com.androiddevs.runningappyt.ui.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.androiddevs.runningappyt.R
+import com.androiddevs.runningappyt.constants.Constants.ACTION_START_OR_RESUME_SERVICE
+import com.androiddevs.runningappyt.services.TrackingServices
 import com.androiddevs.runningappyt.ui.viewmodels.MainViewModel
 import com.google.android.gms.maps.GoogleMap
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,10 +23,19 @@ class TrackingFragment: Fragment(R.layout.fragment_tracking) {
         super.onViewCreated(view, savedInstanceState)
         mapView.onCreate(savedInstanceState)
 
+        btnToggleRun.setOnClickListener{
+            sendCommandToService(ACTION_START_OR_RESUME_SERVICE)
+        }
         mapView.getMapAsync {
             map = it
         }
     }
+
+    private fun sendCommandToService(action: String) =
+        Intent(requireContext(),TrackingServices::class.java).also {
+            it.action = action
+            requireContext().startService(it)
+        }
 
     override fun onResume() {
         super.onResume()
