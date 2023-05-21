@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.androiddevs.runningappyt.R
 import com.androiddevs.runningappyt.constants.Constants.ACTION_START_OR_RESUME_SERVICE
-import com.androiddevs.runningappyt.services.TrackingServices
+import com.androiddevs.runningappyt.services.TrackingService
 import com.androiddevs.runningappyt.ui.viewmodels.MainViewModel
 import com.google.android.gms.maps.GoogleMap
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,7 +32,7 @@ class TrackingFragment: Fragment(R.layout.fragment_tracking) {
     }
 
     private fun sendCommandToService(action: String) =
-        Intent(requireContext(),TrackingServices::class.java).also {
+        Intent(requireContext(),TrackingService::class.java).also {
             it.action = action
             requireContext().startService(it)
         }

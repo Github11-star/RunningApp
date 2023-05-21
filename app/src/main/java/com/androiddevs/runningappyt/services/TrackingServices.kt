@@ -36,7 +36,7 @@ import timber.log.Timber
 typealias Polyline = MutableList<LatLng>
 typealias Polylines = MutableList<Polyline>
 
-class TrackingServices : LifecycleService() {
+class TrackingService : LifecycleService() {
 
     var isFirstRun = true
 
@@ -64,9 +64,9 @@ class TrackingServices : LifecycleService() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.let {
-            when(it.action){
+            when (it.action) {
                 ACTION_START_OR_RESUME_SERVICE -> {
-                    if (isFirstRun){
+                    if(isFirstRun) {
                         startForegroundService()
                         isFirstRun = false
                     } else {
@@ -104,13 +104,12 @@ class TrackingServices : LifecycleService() {
         }
     }
 
-
-    val locationCallback = object : LocationCallback(){
+    val locationCallback = object : LocationCallback() {
         override fun onLocationResult(result: LocationResult) {
             super.onLocationResult(result)
-            if (isTracking.value!!){
+            if(isTracking.value!!) {
                 result?.locations?.let { locations ->
-                    for (location in locations){
+                    for(location in locations) {
                         addPathPoint(location)
                         Timber.d("NEW LOCATION: ${location.latitude}, ${location.longitude}")
                     }
@@ -134,18 +133,18 @@ class TrackingServices : LifecycleService() {
         pathPoints.postValue(this)
     } ?: pathPoints.postValue(mutableListOf(mutableListOf()))
 
-    private fun startForegroundService(){
+    private fun startForegroundService() {
         addEmptyPolyline()
         isTracking.postValue(true)
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE)
-        as NotificationManager
+                as NotificationManager
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel(notificationManager)
         }
 
-        val notificationBuild = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+        val notificationBuilder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setAutoCancel(false)
             .setOngoing(true)
             .setSmallIcon(R.drawable.ic_directions_run_black_24dp)
@@ -153,7 +152,7 @@ class TrackingServices : LifecycleService() {
             .setContentText("00:00:00")
             .setContentIntent(getMainActivityPendingIntent())
 
-        startForeground(NOTIFICATION_ID,notificationBuild.build())
+        startForeground(NOTIFICATION_ID, notificationBuilder.build())
     }
 
     private fun getMainActivityPendingIntent() = PendingIntent.getActivity(
@@ -166,7 +165,7 @@ class TrackingServices : LifecycleService() {
     )
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun createNotificationChannel(notificationManager: NotificationManager){
+    private fun createNotificationChannel(notificationManager: NotificationManager) {
         val channel = NotificationChannel(
             NOTIFICATION_CHANNEL_ID,
             NOTIFICATION_CHANNEL_NAME,
