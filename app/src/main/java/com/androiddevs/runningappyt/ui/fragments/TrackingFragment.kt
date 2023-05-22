@@ -24,7 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_tracking.*
 
 @AndroidEntryPoint
-class TrackingFragment: Fragment(R.layout.fragment_tracking) {
+class TrackingFragment : Fragment(R.layout.fragment_tracking) {
 
     private val viewModel: MainViewModel by viewModels()
 
@@ -38,7 +38,6 @@ class TrackingFragment: Fragment(R.layout.fragment_tracking) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mapView.onCreate(savedInstanceState)
-
         btnToggleRun.setOnClickListener {
             toggleRun()
         }
@@ -121,9 +120,8 @@ class TrackingFragment: Fragment(R.layout.fragment_tracking) {
         }
     }
 
-
     private fun sendCommandToService(action: String) =
-        Intent(requireContext(),TrackingService::class.java).also {
+        Intent(requireContext(), TrackingService::class.java).also {
             it.action = action
             requireContext().startService(it)
         }
@@ -157,11 +155,4 @@ class TrackingFragment: Fragment(R.layout.fragment_tracking) {
         super.onSaveInstanceState(outState)
         mapView?.onSaveInstanceState(outState)
     }
-
-
-
-
-
-
-
 }

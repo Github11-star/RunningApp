@@ -7,5 +7,4 @@ import com.androiddevs.runningappyt.repositories.MainRepository
 class MainViewModel @ViewModelInject constructor(
     val mainRepository: MainRepository
 ): ViewModel() {
-
 }

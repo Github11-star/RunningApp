@@ -65,7 +65,7 @@ class TrackingService : LifecycleService() {
     override fun onCreate() {
         super.onCreate()
         postInitialValues()
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(applicationContext)
 
         isTracking.observe(this, Observer {
             updateLocationTracking(it)
@@ -76,7 +76,7 @@ class TrackingService : LifecycleService() {
         intent?.let {
             when (it.action) {
                 ACTION_START_OR_RESUME_SERVICE -> {
-                    if(isFirstRun) {
+                    if (isFirstRun) {
                         startForegroundService()
                         isFirstRun = false
                     } else {
@@ -123,15 +123,15 @@ class TrackingService : LifecycleService() {
         }
     }
 
-    private fun pauseService(){
+    private fun pauseService() {
         isTracking.postValue(false)
         isTimerEnabled = false
     }
 
     @SuppressLint("MissingPermission")
     private fun updateLocationTracking(isTracking: Boolean) {
-        if(isTracking) {
-            if(TrackingUtility.hasLocationPermissions(this)) {
+        if (isTracking) {
+            if (TrackingUtility.hasLocationPermissions(this)) {
                 val request = LocationRequest().apply {
                     interval = LOCATION_UPDATE_INTERVAL
                     fastestInterval = FASTEST_LOCATION_INTERVAL
@@ -151,9 +151,9 @@ class TrackingService : LifecycleService() {
     val locationCallback = object : LocationCallback() {
         override fun onLocationResult(result: LocationResult) {
             super.onLocationResult(result)
-            if(isTracking.value!!) {
+            if (isTracking.value!!) {
                 result?.locations?.let { locations ->
-                    for(location in locations) {
+                    for (location in locations) {
                         addPathPoint(location)
                         Timber.d("NEW LOCATION: ${location.latitude}, ${location.longitude}")
                     }
@@ -184,7 +184,7 @@ class TrackingService : LifecycleService() {
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE)
                 as NotificationManager
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel(notificationManager)
         }
 
